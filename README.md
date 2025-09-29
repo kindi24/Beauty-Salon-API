@@ -1,61 +1,82 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Beauty Salon Scheduling API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel RESTful API for managing a beauty salon's appointment scheduling system.  
+Supports listing available slots, booking, and canceling appointments, secured with Bearer Token authentication.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
+- Specialists (A, B, C) with service capabilities
+- Services (Haircut, Hairstyling, Manicure) with different durations
+- Working hours: **09:00 – 17:00**
+- Time slots aligned to service durations
+- RESTful endpoints:
+  - **List available slots**
+  - **Book an appointment**
+  - **Cancel an appointment**
+- Secured with Bearer Token authentication
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+---
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Setup Instructions
 
-## Learning Laravel
+### 1. Clone Repository
+bash
+git clone https://github.com/your-username/beauty-salon-api.git
+cd beauty-salon-api
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 2. Install Depedencies
+composer install
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 3. Environment Setup
+Copy .env.example to .env and update:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+DB_CONNECTION=sqlite
+DB_DATABASE=/absolute/path/to/database.sqlite
 
-## Laravel Sponsors
+### 4. Generate API Key
+php artisan key:generate
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 5. Run Migrations & Seeders
+php artisan migrate:fresh --seed
 
-### Premium Partners
+### 6. 6. Run Application
+Use Apache/Nginx with document root pointing to:
+public/index.php
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Authentication
+Auth Type: Bearer Token
+Token: salon123
 
-## Contributing
+Add header:
+Authorization: Bearer salon123
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## API Endpoints
 
-## Code of Conduct
+### 1. List available slots
+GET http://salon.test/api/slots?specialist_id=1&service_id=1&date=2025-09-26
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 2. Book an Appointment
+POST http://salon.test/api/book
 
-## Security Vulnerabilities
+JSON:
+{
+  "specialist_id": 1,
+  "service_id": 2,
+  "date": "2025-10-10",
+  "start_time": "10:00",
+  "client_name": "Bill"
+}
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Success: { "success": true, "appointment_id": {id} }
 
-## License
+Error: { "error": "Outside working hours" }
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### 3. Cancel an Appointment
+DELETE http://salon.test/api/cancel/{id}
+
+Success: { "success": true, "message": "Appointment canceled" }
+
+Error: { "error": "Appointment not found" }
+
+

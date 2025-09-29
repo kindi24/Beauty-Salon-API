@@ -40,7 +40,7 @@ php artisan key:generate
 ### 5. Run Migrations & Seeders
 php artisan migrate:fresh --seed
 
-### 6. 6. Run Application
+### 6. Run Application
 Use Apache/Nginx with document root pointing to:
 public/index.php
 
